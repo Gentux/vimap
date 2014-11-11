@@ -1,5 +1,5 @@
-V*imap*
-=======
+VIM + IMAP = *vimap*
+====================
 
 
 ## Description ##
@@ -19,20 +19,20 @@ worry with synchronization.
 
 ## Quickstart ##
 
-This plugins rely on another library called *imap-cli*, you can install it with:
+This plugins rely on another library called **imap-cli**, you can install it with:
 
 ```
 pip install imap-cli
 ```
 
-Then, configure *imap-cli* creating a configuration file in `~/.config/imap-cli` containing :
+Then, configure **imap-cli** creating a configuration file in `~/.config/imap-cli` containing :
 
     hostname = imap.example.org
     username = username
     password = secret
     ssl = True
 
-Finaly, copy *vimap.vim* and *vimap.py* in your *VIM* plugin directory.
+Finaly, copy **vimap.vim** and **vimap.py** in your **VIM** plugin directory.
 
 
 ## Usage ##
@@ -47,7 +47,7 @@ You can [open new issues](https://github.com/Gentux/imap-cli/issues/new) for que
 
 ## Roadmap ##
 
-The actual version of *Vimap* is *None*. (this version is actually a proof of concept)
+The actual version of **Vimap** is **None**. (this version is actually a proof of concept)
 
 
 ### v0.1 ### (Work in progress)
