@@ -9,5 +9,9 @@ if version < 700
 endif
 
 
-syn region folderListItem start=/^.+\:/ end=/$/
-hi folderListItem bg=green
+syn region folderList_DirectoryName start=/^▸/ end=/  /
+syn region folderList_TotalCount start=/- / end=/ /
+syn region folderList_UnreadCount start=/(/ end=/)$/
+
+hi folderList_DirectoryName gui=bold
+hi folderList_UnreadCount guifg=green

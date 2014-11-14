@@ -12,11 +12,7 @@ from imap_cli import search
 connect_conf = config.new_context_from_file(section='imap')
 display_conf = {
     'format_list': u'{uid:>6} : {subject:<80} | FROM: {from}',
-    'format_status': u' '.join([
-        u'{directory:<20} :',
-        u'{count:>5} Mails -',
-        u'{unseen:>5} Unseen -',
-        u'{recent:>5} Recent']),
+    'format_status': u'▸ {directory}  - {count} ({unseen})',
     'format_thread': u'{uid:>6} : {subject:<80} | FROM: {from}',
     'limit': 10}
 trash_conf = config.new_context_from_file(section='trash')
