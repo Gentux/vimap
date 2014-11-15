@@ -22,15 +22,16 @@ imap_account = None
 
 
 status_mappings = [
-    ('o', ':python vimap.list("INBOX")<cr>'),
+    ('o', ':python vimap.list(vim.current.line.split()[1])<cr>'),
 ]
 
 list_mappings = [
-    ('o', ':python vimap.read("1033")<cr>'),
+    ('o', ':python vimap.read(vim.current.line.split()[0])<cr>'),
+    ('q', ':python vimap.status()<cr>'),
 ]
 
 read_mappings = [
-    ('q', ':python vimap.list()'),
+    ('q', ':python vimap.list()<cr>'),
 ]
 
 
