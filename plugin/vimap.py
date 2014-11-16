@@ -70,11 +70,8 @@ def list(directory=None):
     ensure_connection()
     for mail_info in search.fetch_mails_info(imap_account,
                                              limit=display_conf['limit']):
-        b.append(u'UID : {:<10} From : {:<40} Subject : {}'.format(
-            mail_info['uid'],
-            truncate_string(mail_info['from'], 33),
-            truncate_string(mail_info['subject'], 50),
-        ))
+        b.append(display_conf['format_list'].format(
+            **mail_info).replace('\n', ' '))
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
@@ -93,14 +90,16 @@ def change_mailbox(mailbox_name):
 def read(uid):
     '''Read mail by uid.'''
     ensure_connection()
-    fetched_mail = fetch.read(imap_account, uid)
-    if fetched_mail is None:
+    fetched_mails = fetch.read(imap_account, uid)
+    if fetched_mails is None:
         print "VIMAP: Mail was not fetched, an error occured"
 
     reset_buffer('vimap-read')
     b = vim.current.buffer
     b[:] = None
-    b.append(fetch.display(fetched_mail))
+    for fetched_mail in fetched_mails:
+        for line in fetch.display(fetched_mail).split('\n'):
+            b.append(line)
 
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
@@ -119,11 +118,8 @@ def imap_search(adress):
     b = vim.current.buffer
     b[:] = None
     for mail_info in search.fetch_mails_info(imap_account, mail_set=mail_set):
-        b.append(u'UID : {:<10} From : {:<40} Subject : {}'.format(
-            mail_info['uid'],
-            truncate_string(mail_info['from'], 33),
-            truncate_string(mail_info['subject'], 50),
-        ))
+        b.append(display_conf['format_list'].format(
+            **mail_info).replace('\n', ' '))
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
