@@ -1,7 +1,9 @@
-let s:IMAP_vim = '0.1'
+" Vimap plugin
+" Maintainer:   Romain Soufflet <romain@soufflet.io>
+" URL:          romain.soufflet.io
+" Last Change:  2014 November 17
+" Version:      0.1
 
-" SECTION: Script init
-"=====================
 
 if exists("g:loaded_imap_vim")
     finish
@@ -17,9 +19,6 @@ endif
 let g:loaded_imap_vim = 1
 
 
-" SECTION: Load python functions
-"===============================
-
 python << EOF
 import vim
 import sys
@@ -28,4 +27,5 @@ sys.path.append(vimap_path)
 import vimap
 EOF
 
-python vimap.status()
+
+map <F12> :python vimap.status()<cr>
