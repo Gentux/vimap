@@ -50,7 +50,7 @@ You can [open new issues](https://github.com/Gentux/imap-cli/issues/new) for que
 The actual version of **Vimap** is **None**. (this version is actually a proof of concept)
 
 
-### v0.1 ### (Work in progress)
+### v0.1 ### (current version)
 
 * Status (list directory and new mail per directory)
 * List (list content of a directory
