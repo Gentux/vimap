@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+"""VIMAP python functions"""
+
+
 import vim
 
 import imap_cli
@@ -10,16 +13,14 @@ from imap_cli import search
 
 
 connect_conf = config.new_context_from_file(section='imap')
-display_conf = {
-    'format_list': u'{uid:>6} : {subject:<80} | FROM: {from}',
-    'format_status': u'▸ {directory}  - {count} ({unseen})',
-    'format_thread': u'{uid:>6} : {subject:<80} | FROM: {from}',
-    'limit': 10}
-trash_conf = config.new_context_from_file(section='trash')
-
 current_dir = 'INBOX'
+display_conf = {
+    'format_list': u'{uid:>5} ▾ {from:<35} : {subject}',
+    'format_status': u'▸ {directory}  - {count} ({unseen})',
+    'format_thread': u'{uid:>5} ▾ {from:<35} : {subject}',
+    'limit': 10}
 imap_account = None
-
+trash_conf = config.new_context_from_file(section='trash')
 
 status_mappings = [
     ('o', ':python vimap.list(vim.current.line.split()[1])<cr>'),
@@ -47,12 +48,13 @@ def ensure_connection():
 def status():
     reset_buffer('vimap-status')
     b = vim.current.buffer
-    b[:] = None
 
     ensure_connection()
     for directory_status in sorted(imap_cli.status(imap_account),
                                    key=lambda obj: obj['directory']):
         b.append(display_conf['format_status'].format(**directory_status))
+
+    b[0] = u'Mailbox list:'
 
     for key, action in status_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
@@ -62,7 +64,6 @@ def list(directory=None):
     '''List mail in specified folder.'''
     reset_buffer('vimap-list')
     b = vim.current.buffer
-    b[:] = None
 
     if directory is not None and current_dir != directory:
         change_mailbox(directory)
@@ -70,8 +71,11 @@ def list(directory=None):
     ensure_connection()
     for mail_info in search.fetch_mails_info(imap_account,
                                              limit=display_conf['limit']):
+        mail_info['from'] = truncate_string(mail_info['from'], 35)
         b.append(display_conf['format_list'].format(
             **mail_info).replace('\n', ' '))
+
+    b[0] = u'Mails from {}:'.format(current_dir)
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
@@ -96,10 +100,11 @@ def read(uid):
 
     reset_buffer('vimap-read')
     b = vim.current.buffer
-    b[:] = None
     for fetched_mail in fetched_mails:
         for line in fetch.display(fetched_mail).split('\n'):
             b.append(line)
+
+    b.pop(0)
 
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
@@ -116,10 +121,12 @@ def imap_search(adress):
 
     reset_buffer('vimap-list')
     b = vim.current.buffer
-    b[:] = None
     for mail_info in search.fetch_mails_info(imap_account, mail_set=mail_set):
+        mail_info['from'] = truncate_string(mail_info['from'], 35)
         b.append(display_conf['format_list'].format(
             **mail_info).replace('\n', ' '))
+
+    b[0] = u'Mails from {}:'.format(current_dir)
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))

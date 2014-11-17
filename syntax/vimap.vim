@@ -9,9 +9,19 @@ if version < 700
 endif
 
 
-syn region folderList_DirectoryName start=/^▸/ end=/  /
-syn region folderList_TotalCount start=/- / end=/ /
-syn region folderList_UnreadCount start=/(/ end=/)$/
+" Syntax for Status page
+syn region folderList_line start=/^▸/ end=/)$/
+syn region folderList_DirectoryName containedin=folderList_line start=/^▸/ end=/  /
+syn region folderList_TotalCount containedin=folderList_line start=/- / end=/ /
+syn region folderList_UnreadCount containedin=folderList_line start=/(/ end=/)$/
 
 hi folderList_DirectoryName gui=bold
 hi folderList_UnreadCount guifg=green
+
+" Syntax for List page
+syn region list_line start=/^\s\+\d\+/ end=/$/
+syn region list_UID containedin=list_line start=/^\s\+\d\+/ end=/ /
+syn region list_FROM containedin=list_line start=/▾ / end=/\s\+:/
+
+hi list_UID gui=bold guifg=red
+hi list_FROM guifg=orange
