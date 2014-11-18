@@ -19,9 +19,9 @@ hi folderList_DirectoryName gui=bold
 hi folderList_UnreadCount guifg=green
 
 " Syntax for List page
-syn region list_line start=/^\s\+\d\+/ end=/$/
-syn region list_UID containedin=list_line start=/^\s\+\d\+/ end=/ /
-syn region list_FROM containedin=list_line start=/▾ / end=/\s\+:/
+syn region list_UID containedin=listLine start=/^\s\+\d\+/ end=/ /
+syn region list_FROM containedin=listLine start=/▾ / end=/\s\+:/
+syn region listLine start=/^\s\+\d\+/ end=/$/
 
 hi list_UID gui=bold guifg=red
 hi list_FROM guifg=orange
