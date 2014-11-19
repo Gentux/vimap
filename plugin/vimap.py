@@ -6,6 +6,8 @@
 
 import vim
 
+import six
+
 import imap_cli
 from imap_cli import config
 from imap_cli import fetch
@@ -94,9 +96,12 @@ def change_mailbox(mailbox_name):
 def read(uid):
     '''Read mail by uid.'''
     ensure_connection()
-    fetched_mails = fetch.read(imap_account, uid)
+    if isinstance(uid, six.string_types):
+        uid = int(uid)
+    fetched_mails = list(fetch.read(imap_account, uid))
     if fetched_mails is None:
         print "VIMAP: Mail was not fetched, an error occured"
+        list_dir()
 
     reset_buffer('vimap-read')
     b = vim.current.buffer
