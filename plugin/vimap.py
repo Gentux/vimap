@@ -50,6 +50,7 @@ def ensure_connection():
 def status():
     reset_buffer('vimap-status')
     b = vim.current.buffer
+    b[:] = None
 
     ensure_connection()
     for directory_status in sorted(imap_cli.status(imap_account),
@@ -62,13 +63,16 @@ def status():
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
 
 
-def list(directory=None):
+def list_dir(directory=None):
     '''List mail in specified folder.'''
     reset_buffer('vimap-list')
     b = vim.current.buffer
+    b[:] = None
 
     if directory is not None and current_dir != directory:
-        change_mailbox(directory)
+        ret = change_mailbox(directory)
+        if ret is None:
+            return None
 
     ensure_connection()
     for mail_info in search.fetch_mails_info(imap_account,
@@ -90,7 +94,9 @@ def change_mailbox(mailbox_name):
     cd_result = imap_cli.change_dir(imap_account, directory=mailbox_name)
     if cd_result == -1:
         print 'VIMAP: IMAP Folder {} can\'t be found'.format(mailbox_name)
+        return None
     current_dir = mailbox_name
+    return mailbox_name
 
 
 def read(uid):
@@ -105,13 +111,12 @@ def read(uid):
 
     reset_buffer('vimap-read')
     b = vim.current.buffer
+    b[:] = None
     for fetched_mail in fetched_mails:
         for line in fetch.display(fetched_mail).split('\n'):
             b.append(line)
 
     vim.command("set ft=mail")
-    b.pop(0)
-
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
 
@@ -127,6 +132,7 @@ def imap_search(adress):
 
     reset_buffer('vimap-list')
     b = vim.current.buffer
+    b[:] = None
     for mail_info in search.fetch_mails_info(imap_account, mail_set=mail_set):
         mail_info['from'] = truncate_string(mail_info['from'], 35)
         b.append(display_conf['format_list'].format(
