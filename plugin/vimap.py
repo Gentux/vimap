@@ -25,7 +25,7 @@ imap_account = None
 trash_conf = config.new_context_from_file(section='trash')
 
 status_mappings = [
-    ('o', ':python vimap.list(vim.current.line.split()[1])<cr>'),
+    ('o', ':python vimap.list_dir(vim.current.line.split()[1])<cr>'),
 ]
 
 list_mappings = [
@@ -34,7 +34,7 @@ list_mappings = [
 ]
 
 read_mappings = [
-    ('q', ':python vimap.list()<cr>'),
+    ('q', ':python vimap.list_dir()<cr>'),
 ]
 
 
