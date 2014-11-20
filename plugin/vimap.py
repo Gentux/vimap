@@ -30,6 +30,7 @@ status_mappings = [
 
 list_mappings = [
     ('o', ':python vimap.read(vim.current.line.split()[0])<cr>'),
+    ('/', ':python vimap.imap_search("")<left><left>'),
     ('q', ':python vimap.status()<cr>'),
 ]
 
@@ -138,7 +139,7 @@ def imap_search(adress):
         b.append(display_conf['format_list'].format(
             **mail_info).replace('\n', ' '))
 
-    b[0] = u'Mails from {}:'.format(current_dir)
+    b[0] = u'Mails from «{}»:'.format(adress)
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
