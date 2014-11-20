@@ -114,7 +114,7 @@ def read(uid):
     b[:] = None
     for fetched_mail in fetched_mails:
         for line in fetch.display(fetched_mail).split('\n'):
-            b.append(line)
+            b.append(line.replace('\r', ''))
 
     vim.command("set ft=mail")
     for key, action in read_mappings:
