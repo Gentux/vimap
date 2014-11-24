@@ -16,6 +16,7 @@ from imap_cli import search
 
 connect_conf = config.new_context_from_file(section='imap')
 current_dir = 'INBOX'
+current_mail = None
 display_conf = {
     'format_list': u'{uid:>5} ▾ {from:<35} : {subject}',
     'format_status': u'▸ {directory}  - {count} ({unseen})',
@@ -36,6 +37,7 @@ list_mappings = [
 
 read_mappings = [
     ('q', ':python vimap.list_dir()<cr>'),
+    ('h', ':python vimap.headers()<cr>'),
 ]
 
 
@@ -110,11 +112,13 @@ def read(uid):
         print "VIMAP: Mail was not fetched, an error occured"
         list_dir()
 
+    global current_mail
     reset_buffer('vimap-read')
     b = vim.current.buffer
     b[:] = None
     for fetched_mail in fetched_mails:
-        for line in fetch.display(fetched_mail).split('\n'):
+        current_mail = fetched_mail
+        for line in fetch.display(current_mail).split('\n'):
             b.append(line.replace('\r', ''))
 
     vim.command("set ft=mail")
@@ -143,6 +147,15 @@ def imap_search(adress):
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
+
+
+def headers():
+    reset_buffer('vimap-read')
+    b = vim.current.buffer
+    b[:] = None
+
+    for header_name, header_value in current_mail['headers'].items():
+        b.append('{}: {}'.format(header_name, header_value).replace('\n', ' '))
 
 
 def truncate_string(string, length):
