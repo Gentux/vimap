@@ -155,7 +155,14 @@ def headers():
     b[:] = None
 
     for header_name, header_value in current_mail['headers'].items():
-        b.append('{}: {}'.format(header_name, header_value).replace('\n', ' '))
+        lines = '{}: {}'.format(header_name, header_value).split('\n')
+        for line in lines:
+            b.append(line)
+
+    b[0] = u'Mail headers:'
+    vim.command("set ft=mail")
+    for key, action in read_mappings:
+        vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
 
 
 def truncate_string(string, length):
