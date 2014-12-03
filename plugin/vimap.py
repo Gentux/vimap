@@ -88,6 +88,7 @@ def list_dir(directory=None):
 
     for key, action in list_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
+    vim.command("normal G")
 
 
 def change_mailbox(mailbox_name):
@@ -124,6 +125,7 @@ def read(uid):
     vim.command("set ft=mail")
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
+    vim.command("normal dd")
 
 
 def imap_search(adress):
