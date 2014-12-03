@@ -18,10 +18,10 @@ connect_conf = config.new_context_from_file(section='imap')
 current_dir = 'INBOX'
 current_mail = None
 display_conf = {
-    'format_list': u'{uid:>5} ▾ {from:<35} : {subject}',
+    'format_list': u'{uid:>5} ▾ {from:<36} : {subject}',
     'format_status': u'▸ {directory}  - {count} ({unseen})',
-    'format_thread': u'{uid:>5} ▾ {from:<35} : {subject}',
-    'limit': 10}
+    'format_thread': u'{uid:>5} ▾ {from:<36} : {subject}',
+    'limit': 20}
 imap_account = None
 trash_conf = config.new_context_from_file(section='trash')
 
