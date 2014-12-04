@@ -27,6 +27,7 @@ trash_conf = config.new_context_from_file(section='trash')
 
 status_mappings = [
     ('o', ':python vimap.list_dir(vim.current.line.split()[1])<cr>'),
+    ('q', ':q<CR>'),
 ]
 
 list_mappings = [
@@ -36,8 +37,8 @@ list_mappings = [
 ]
 
 read_mappings = [
-    ('q', ':python vimap.list_dir()<cr>'),
     ('h', ':python vimap.headers()<cr>'),
+    ('q', ':python vimap.list_dir()<cr>'),
 ]
 
 
@@ -165,6 +166,7 @@ def headers():
     vim.command("set ft=mail")
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
+    vim.command("normal dd")
 
 
 def truncate_string(string, length):
@@ -179,8 +181,6 @@ def reset_buffer(buffer_name):
     vim.command("pcl")
     vim.command("silent pedit +set\ ma {}".format(buffer_name))
     vim.command("wincmd P")  # switch to preview window
-    # subchannel window quick quit key 'q'
-    vim.command('nnoremap <buffer> q :q<CR>')
     vim.command("set bufhidden=hide buftype=nofile ft=vimap")
     vim.command("setlocal nobuflisted")  # don't come up in buffer lists
     vim.command("setlocal nonumber")  # no line numbers, we have in/out nums
