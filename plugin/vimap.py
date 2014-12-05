@@ -79,11 +79,12 @@ def list_dir(directory=None):
             return None
 
     ensure_connection()
-    for mail_info in search.fetch_mails_info(imap_account,
-                                             limit=display_conf['limit']):
-        mail_info['from'] = truncate_string(mail_info['from'], 35)
-        b.append(display_conf['format_list'].format(
-            **mail_info).replace('\n', ' '))
+    threads = search.fetch_threads(imap_account, limit=display_conf['limit'])
+    mail_tree = search.threads_to_mail_tree(threads)
+    for output in search.display_mail_tree(
+            imap_account, mail_tree,
+            format_thread=display_conf['format_thread']):
+        b.append(output)
 
     b[0] = u'Mails from {}:'.format(current_dir)
 
