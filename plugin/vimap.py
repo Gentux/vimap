@@ -18,12 +18,13 @@ connect_conf = config.new_context_from_file(section='imap')
 current_dir = 'INBOX'
 current_mail = None
 display_conf = {
-    'format_list': u'{uid:>5} ▾ {from:<36} : {subject}',
+    'format_list': u'{uid:>5} ▾ {from:<36.35} : {subject}',
     'format_status': u'▸ {directory}  - {count} ({unseen})',
-    'format_thread': u'{uid:>5} ▾ {from:<36} : {subject}',
+    'format_thread': u'{uid:>5} ▾ {from:<36.35} : {subject}',
     'limit': 20}
 imap_account = None
 trash_conf = config.new_context_from_file(section='trash')
+uids = []
 
 status_mappings = [
     ('o', ':python vimap.list_dir(vim.current.line.split()[1])<cr>'),
@@ -84,7 +85,8 @@ def list_dir(directory=None):
     for output in search.display_mail_tree(
             imap_account, mail_tree,
             format_thread=display_conf['format_thread']):
-        b.append(output)
+        for line in output.split('\n'):
+            b.append(line)
 
     b[0] = u'Mails from {}:'.format(current_dir)
 
@@ -143,7 +145,6 @@ def imap_search(adress):
     b = vim.current.buffer
     b[:] = None
     for mail_info in search.fetch_mails_info(imap_account, mail_set=mail_set):
-        mail_info['from'] = truncate_string(mail_info['from'], 35)
         b.append(display_conf['format_list'].format(
             **mail_info).replace('\n', ' '))
 
@@ -168,13 +169,6 @@ def headers():
     for key, action in read_mappings:
         vim.command("nnoremap <silent> <buffer> {} {}".format(key, action))
     vim.command("normal dd")
-
-
-def truncate_string(string, length):
-    minus_than_position = string.find('<')
-    if minus_than_position > 0 and string.find('>') > minus_than_position:
-        string = string[0:minus_than_position]
-    return string if len(string) < length else u'{0}…'.format(string[0:length])
 
 
 def reset_buffer(buffer_name):
